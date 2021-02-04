@@ -1,0 +1,28 @@
+package com.kakapo.myproject.activity
+
+import android.graphics.Typeface
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.WindowManager
+import android.widget.TextView
+import com.kakapo.myproject.R
+
+class SplashActivity : AppCompatActivity() {
+
+    private lateinit var tvAppName: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        tvAppName = findViewById(R.id.tv_app_name)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+
+        val typeFace: Typeface = Typeface.createFromAsset(assets, "carbon bl.ttf")
+        tvAppName.typeface = typeFace
+    }
+}
