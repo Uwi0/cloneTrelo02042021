@@ -25,8 +25,8 @@ class SignUpActivity : BaseActivity() {
         setContentView(R.layout.activity_sign_up)
         toolbar = findViewById(R.id.toolbar_sign_up_activity)
         etName = findViewById(R.id.et_name)
-        etEmail = findViewById(R.id.et_email)
-        etPassword = findViewById(R.id.et_password)
+        etEmail = findViewById(R.id.et_email_sign_up)
+        etPassword = findViewById(R.id.et_password_sign_up)
         btnSignUp = findViewById(R.id.btn_sign_up)
 
         window.setFlags(
@@ -102,7 +102,7 @@ class SignUpActivity : BaseActivity() {
                     }else{
                         Toast.makeText(
                             this@SignUpActivity,
-                            task.exception!!.message,
+                            "Registration failed",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
