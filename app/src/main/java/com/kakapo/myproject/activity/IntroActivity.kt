@@ -8,7 +8,7 @@ import android.widget.Button
 import com.kakapo.myproject.R
 
 @Suppress("DEPRECATION")
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
 
     private lateinit var btnSignUpIntro: Button
     private lateinit var btnSignInIntro: Button

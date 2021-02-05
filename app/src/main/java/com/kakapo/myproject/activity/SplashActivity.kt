@@ -8,6 +8,7 @@ import android.os.Handler
 import android.view.WindowManager
 import android.widget.TextView
 import com.kakapo.myproject.R
+import com.kakapo.myproject.firebase.FireStoreClass
 
 class SplashActivity : AppCompatActivity() {
 
@@ -28,7 +29,17 @@ class SplashActivity : AppCompatActivity() {
         tvAppName.typeface = typeFace
 
         Handler().postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
+
+            val currentUserId = FireStoreClass().getCurrentUserId()
+
+            if(currentUserId.isNotEmpty()){
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }else{
+                val intent = Intent(this, IntroActivity::class.java)
+                startActivity(intent)
+            }
+
             finish()
         }, 2500)
     }
