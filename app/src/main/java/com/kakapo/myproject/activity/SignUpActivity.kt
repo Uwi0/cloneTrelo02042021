@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.kakapo.myproject.R
+import com.kakapo.myproject.firebase.FireStoreClass
+import com.kakapo.myproject.models.User
 
 @Suppress("DEPRECATION")
 class SignUpActivity : BaseActivity() {
@@ -88,17 +90,16 @@ class SignUpActivity : BaseActivity() {
                 .getInstance()
                 .createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    hideProgressDialog()
+//                    hideProgressDialog()
                     if(task.isSuccessful){
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         val registerEmail = firebaseUser.email!!
-                        Toast.makeText(
-                            this@SignUpActivity,
-                            "$name you have successfully registered the email address $registerEmail",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        FirebaseAuth.getInstance().signOut()
-                        finish()
+                        val user = User(
+                            firebaseUser.uid,
+                            name,
+                            registerEmail
+                        )
+                        FireStoreClass().registerUser(this, user)
                     }else{
                         Toast.makeText(
                             this@SignUpActivity,
@@ -108,5 +109,16 @@ class SignUpActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    fun userRegisteredSuccess(){
+        Toast.makeText(
+            this@SignUpActivity,
+            "you have successfully registered the email address",
+            Toast.LENGTH_SHORT
+        ).show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut()
+        finish()
     }
 }
