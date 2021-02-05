@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1063070452468",
+    "project_id": "my-project-d5770",
+    "storage_bucket": "my-project-d5770.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063070452468:android:0d0f5e856085137a82eca1",
+        "android_client_info": {
+          "package_name": "com.kakapo.myproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063070452468-q026tmb12fhebkmdm4ksmiheht0cmj60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCZ-yrhH_iSYwiA46Sha63s8TinkFMRzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063070452468-q026tmb12fhebkmdm4ksmiheht0cmj60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
