@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.kakapo.myproject.R
+import com.kakapo.myproject.firebase.FireStoreClass
+import com.kakapo.myproject.models.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
 @Suppress("DEPRECATION")
@@ -61,13 +63,10 @@ class SignInActivity : BaseActivity() {
             showProgressDialog(resources.getString(R.string.please_wait))
             auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this){task ->
-                        hideProgressDialog()
                         if(task.isSuccessful){
-                            Log.d("SignIn", "Sign in with email success")
-                            val user = auth.currentUser
-                            val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                            startActivity(intent)
+                            FireStoreClass().signInUser(this@SignInActivity)
                         }else{
+                            hideProgressDialog()
                             Log.w("SignIn", "SignIn with email:Fail", task.exception)
                             Toast.makeText(
                                     this@SignInActivity,
@@ -91,5 +90,12 @@ class SignInActivity : BaseActivity() {
             }
             else -> true
         }
+    }
+
+    fun signInSuccess(user: User){
+        hideProgressDialog()
+        val intent = Intent(this@SignInActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

@@ -90,7 +90,6 @@ class SignUpActivity : BaseActivity() {
                 .getInstance()
                 .createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-//                    hideProgressDialog()
                     if(task.isSuccessful){
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         val registerEmail = firebaseUser.email!!
@@ -101,6 +100,7 @@ class SignUpActivity : BaseActivity() {
                         )
                         FireStoreClass().registerUser(this, user)
                     }else{
+                        hideProgressDialog()
                         Toast.makeText(
                             this@SignUpActivity,
                             "Registration failed",
