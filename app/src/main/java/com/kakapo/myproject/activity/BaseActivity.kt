@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.kakapo.myproject.R
+import kotlinx.android.synthetic.main.dialog_progress.*
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -25,8 +26,7 @@ open class BaseActivity : AppCompatActivity() {
     fun showProgressDialog(text: String){
         mProgressDialog = Dialog(this)
         mProgressDialog.setContentView(R.layout.dialog_progress)
-        val tvProgressDialog: TextView = findViewById(R.id.tv_progress_text)
-        tvProgressDialog.text = text
+        mProgressDialog.tv_progress_text.text = text
         mProgressDialog.show()
     }
 

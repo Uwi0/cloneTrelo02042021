@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.kakapo.myproject.R
 
 @Suppress("DEPRECATION")
@@ -68,7 +70,7 @@ class SignUpActivity : BaseActivity() {
                 false
             }
             TextUtils.isEmpty(password) ->{
-                showErrorSnackBar("Please enter a passowrd")
+                showErrorSnackBar("Please enter a password")
                 false
             }
             else -> true
@@ -81,11 +83,30 @@ class SignUpActivity : BaseActivity() {
         val password: String = etPassword.text.toString().trim{ it <= ' ' }
 
         if(validateForm(name, email, password)){
-            Toast.makeText(
-                this@SignUpActivity,
-                "Now we can register user",
-                Toast.LENGTH_SHORT
-            ).show()
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirebaseAuth
+                .getInstance()
+                .createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    hideProgressDialog()
+                    if(task.isSuccessful){
+                        val firebaseUser: FirebaseUser = task.result!!.user!!
+                        val registerEmail = firebaseUser.email!!
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            "$name you have successfully registered the email address $registerEmail",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        FirebaseAuth.getInstance().signOut()
+                        finish()
+                    }else{
+                        Toast.makeText(
+                            this@SignUpActivity,
+                            task.exception!!.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 }
