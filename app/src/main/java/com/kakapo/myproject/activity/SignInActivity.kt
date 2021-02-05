@@ -7,14 +7,15 @@ import androidx.appcompat.widget.Toolbar
 import com.kakapo.myproject.R
 
 @Suppress("DEPRECATION")
-class SignUpActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
-        toolbar = findViewById(R.id.toolbar_sign_up_activity)
+        setContentView(R.layout.activity_sign_in)
+
+        toolbar = findViewById(R.id.toolbar_sign_in_activity)
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
