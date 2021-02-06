@@ -64,7 +64,7 @@ class SignInActivity : BaseActivity() {
             auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this){task ->
                         if(task.isSuccessful){
-                            FireStoreClass().signInUser(this@SignInActivity)
+                            FireStoreClass().loadUserData(this@SignInActivity)
                         }else{
                             hideProgressDialog()
                             Log.w("SignIn", "SignIn with email:Fail", task.exception)

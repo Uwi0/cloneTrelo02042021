@@ -3,7 +3,6 @@ package com.kakapo.myproject.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -24,7 +23,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
 
         nav_view.setNavigationItemSelectedListener(this)
-        FireStoreClass().signInUser(this)
+        FireStoreClass().loadUserData(this)
     }
 
     override fun onBackPressed() {
@@ -39,11 +38,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         when(item.itemId){
             R.id.nav_my_profile -> {
-                Toast.makeText(
-                        this@MainActivity,
-                        "My Profile",
-                        Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(this@MainActivity, MyProfileActivity::class.java)
+                startActivity(intent)
             }
 
             R.id.nav_sign_out -> {
