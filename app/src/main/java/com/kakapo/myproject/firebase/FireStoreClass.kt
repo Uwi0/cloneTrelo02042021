@@ -2,6 +2,7 @@ package com.kakapo.myproject.firebase
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -64,6 +65,34 @@ class FireStoreClass {
         }
 
         return currentUserId
+    }
+
+    fun updateUserProfileData(activity: MyProfileActivity, userHashMap: HashMap<String, Any>){
+        mFireStore.collection(Constants.USERS)
+                .document(getCurrentUserId())
+                .update(userHashMap)
+                .addOnSuccessListener {
+                    Log.i(activity.javaClass.simpleName, "ProfileData Update")
+                    Toast.makeText(
+                            activity,
+                            "Profile updated successfully!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    activity.profileUpdateSuccess()
+                }
+                .addOnFailureListener{ e ->
+                    Log.e(
+                            activity.javaClass.simpleName,
+                            "error while creating board",
+                            e
+                    )
+
+                    Toast.makeText(
+                            activity,
+                            "Error while updating the profile!!",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
     }
 
 }
