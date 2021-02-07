@@ -8,6 +8,8 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +18,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.kakapo.myproject.R
 import com.kakapo.myproject.firebase.FireStoreClass
 import com.kakapo.myproject.models.User
@@ -31,6 +35,7 @@ class MyProfileActivity : BaseActivity() {
     }
 
     private var mSelectedImageUri: Uri? = null
+    private var mProfileImageUri: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +45,7 @@ class MyProfileActivity : BaseActivity() {
 
         FireStoreClass().loadUserData(this)
         setupImageFromStorage()
+        setBtnUpdateOnCLick()
     }
 
     override fun onRequestPermissionsResult(
@@ -167,6 +173,60 @@ class MyProfileActivity : BaseActivity() {
         )
 
         startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST_CODE)
+    }
+
+    private fun uploadUserImage(){
+        showProgressDialog(resources.getString(R.string.please_wait))
+        if(mSelectedImageUri != null){
+
+             val storageReference: StorageReference = FirebaseStorage
+                     .getInstance()
+                     .reference
+                     .child(
+                             "USER_IMAGE" +
+                                     "${System.currentTimeMillis()}" +
+                                     ".${getFileExtensions(mSelectedImageUri)}"
+                     )
+
+            storageReference.putFile(mSelectedImageUri!!).addOnSuccessListener { taskSnapshot ->
+                Log.i(
+                        "Firebase Image Url",
+                        taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
+                )
+
+                taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener { uri ->
+                    Log.i("Downloadable Image Uri", uri.toString())
+                    mProfileImageUri = uri.toString()
+
+                    hideProgressDialog()
+                    //TODO UpdateUserProfileData
+
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(
+                        this@MyProfileActivity,
+                        exception.message,
+                        Toast.LENGTH_SHORT
+                ).show()
+
+                hideProgressDialog()
+            }
+
+        }
+    }
+
+    private fun getFileExtensions(uri: Uri?): String?{
+        return MimeTypeMap
+                .getSingleton()
+                .getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+    private fun setBtnUpdateOnCLick(){
+        btn_update.setOnClickListener {
+            if (mSelectedImageUri != null){
+                uploadUserImage()
+            }
+        }
     }
 
 }
