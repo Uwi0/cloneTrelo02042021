@@ -30,6 +30,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
 
         nav_view.setNavigationItemSelectedListener(this)
+        setupFabButton()
         FireStoreClass().loadUserData(this)
     }
 
@@ -103,6 +104,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(nav_user_image)
 
         tv_username.text = user.name
+    }
+
+    private fun setupFabButton(){
+        fab_create_board.setOnClickListener{
+            val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 
