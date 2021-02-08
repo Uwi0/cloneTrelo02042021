@@ -6,10 +6,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.kakapo.myproject.activity.MainActivity
-import com.kakapo.myproject.activity.MyProfileActivity
-import com.kakapo.myproject.activity.SignInActivity
-import com.kakapo.myproject.activity.SignUpActivity
+import com.kakapo.myproject.activity.*
+import com.kakapo.myproject.models.Board
 import com.kakapo.myproject.models.User
 import com.kakapo.myproject.utils.Constants
 
@@ -27,6 +25,31 @@ class FireStoreClass {
             .addOnFailureListener { e ->
                 Log.e(activity.javaClass.simpleName, "Error writing document $e")
             }
+    }
+
+    fun createBoard(activity: CreateBoardActivity, board: Board){
+        mFireStore.collection(Constants.BOARD)
+                .document()
+                .set(board, SetOptions.merge())
+                .addOnSuccessListener{
+                    Log.e(activity.javaClass.simpleName, "Board Created successfully.")
+
+                    Toast.makeText(
+                            activity,
+                            "Board created successfully",
+                            Toast.LENGTH_SHORT
+                    ).show()
+
+                    activity.boardCreateSuccessFully()
+                }
+                .addOnFailureListener{ e ->
+                    activity.hideProgressDialog()
+                    Log.e(
+                            activity.javaClass.name,
+                            "Error while creating Board.",
+                            e
+                    )
+                }
     }
 
     fun loadUserData(activity: Activity){

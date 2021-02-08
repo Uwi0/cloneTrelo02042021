@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.kakapo.myproject.R
 import com.kakapo.myproject.firebase.FireStoreClass
 import com.kakapo.myproject.models.User
+import com.kakapo.myproject.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -22,6 +23,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     companion object{
         const val MY_PROFILE_REQUEST_CODE: Int = 11
     }
+
+    private lateinit var mUsername: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +99,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun updateNavigationUserDetails(user: User) {
+
+        mUsername = user.name
+
         Glide
             .with(this)
             .load(user.image)
@@ -109,6 +115,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun setupFabButton(){
         fab_create_board.setOnClickListener{
             val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
+            intent.putExtra(Constants.NAME, mUsername)
             startActivity(intent)
         }
     }
