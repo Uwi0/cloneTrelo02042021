@@ -5,23 +5,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.kakapo.myproject.R
+import com.kakapo.myproject.adapter.BoardItemAdapter
 import com.kakapo.myproject.firebase.FireStoreClass
+import com.kakapo.myproject.models.Board
 import com.kakapo.myproject.models.User
 import com.kakapo.myproject.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object{
         const val MY_PROFILE_REQUEST_CODE: Int = 11
+        const val CREATE_BOARD_REQUEST_CODE: Int = 12
     }
 
     private lateinit var mUsername: String
@@ -34,7 +40,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         nav_view.setNavigationItemSelectedListener(this)
         setupFabButton()
-        FireStoreClass().loadUserData(this)
+        FireStoreClass().loadUserData(this, true)
     }
 
     override fun onBackPressed() {
@@ -75,6 +81,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FireStoreClass().loadUserData(this)
+        }else if(resultCode == Activity.RESULT_OK && requestCode == CREATE_BOARD_REQUEST_CODE){
+
+            FireStoreClass().getBoardList(this)
+
         }else{
             Log.e("Cancelled", "Cancelled")
         }
@@ -98,7 +108,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    fun updateNavigationUserDetails(user: User) {
+    fun updateNavigationUserDetails(user: User, readBoardList: Boolean) {
 
         mUsername = user.name
 
@@ -110,15 +120,37 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(nav_user_image)
 
         tv_username.text = user.name
+
+        if(readBoardList){
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FireStoreClass().getBoardList(this)
+        }
     }
 
     private fun setupFabButton(){
         fab_create_board.setOnClickListener{
             val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
             intent.putExtra(Constants.NAME, mUsername)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
     }
 
+    fun populateBoardToUi(boardList: ArrayList<Board>){
 
+        hideProgressDialog()
+        if(boardList.size > 0){
+            rv_board_list.visibility = View.VISIBLE
+            tv_no_board_available.visibility = View.GONE
+
+            rv_board_list.layoutManager = LinearLayoutManager(this@MainActivity)
+            rv_board_list.setHasFixedSize(true)
+
+            val adapter = BoardItemAdapter(this, boardList)
+            rv_board_list.adapter = adapter
+        }else{
+            rv_board_list.visibility = View.GONE
+            tv_no_board_available.visibility = View.VISIBLE
+        }
+
+    }
 }
