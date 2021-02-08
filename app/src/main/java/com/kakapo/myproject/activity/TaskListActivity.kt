@@ -1,12 +1,13 @@
 package com.kakapo.myproject.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakapo.myproject.R
+import com.kakapo.myproject.adapter.TaskListItemAdapter
 import com.kakapo.myproject.firebase.FireStoreClass
 import com.kakapo.myproject.models.Board
+import com.kakapo.myproject.models.Task
 import com.kakapo.myproject.utils.Constants
-import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.activity_task_list.*
 
 class TaskListActivity : BaseActivity(){
@@ -41,5 +42,18 @@ class TaskListActivity : BaseActivity(){
     fun boardDetails(board: Board){
         hideProgressDialog()
         setupActionBar(board.name)
+
+        val addTaskList = Task(resources.getString(R.string.add_list))
+        board.taskList.add(addTaskList)
+
+
+        rv_task_list.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
+        rv_task_list.setHasFixedSize(true)
+        val adapter = TaskListItemAdapter(this, board.taskList)
+        rv_task_list.adapter = adapter
     }
 }
