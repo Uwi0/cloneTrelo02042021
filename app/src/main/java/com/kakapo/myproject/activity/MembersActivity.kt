@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakapo.myproject.R
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.dialog_search_member.*
 class MembersActivity : BaseActivity() {
 
     private lateinit var mBoardDetail: Board
+    private lateinit var mAssignedMemberList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,17 +64,25 @@ class MembersActivity : BaseActivity() {
         }
     }
 
-    private fun dialogSearchMember(){
+    private fun dialogSearchMember() {
         val dialog = Dialog(this)
+        /*Set the screen content from a layout resource.
+    The resource will be inflated, adding all top-level views to the screen.*/
         dialog.setContentView(R.layout.dialog_search_member)
         dialog.tv_add.setOnClickListener {
+
             val email = dialog.et_email_search_member.text.toString()
-            if (email.isNotEmpty()){
-                //todo search email from database
-            }else{
+
+            if (email.isNotEmpty()) {
+                dialog.dismiss()
+
+                showProgressDialog(resources.getString(R.string.please_wait))
+                FireStoreClass().getMemberDetails(this@MembersActivity, email)
+            } else {
+                showErrorSnackBar("Please enter members email address.")
                 Toast.makeText(
                     this@MembersActivity,
-                    "Please enter member email address",
+                    "Please enter members email address.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -83,13 +93,25 @@ class MembersActivity : BaseActivity() {
         dialog.show()
     }
 
+    fun memberDetails(user: User){
+        mBoardDetail.assignedTo.add(user.id)
+        FireStoreClass().assignMemberToBoard(this, mBoardDetail, user)
+    }
+
     fun setupMemberList(list: ArrayList<User>){
+        mAssignedMemberList = list
         hideProgressDialog()
         rv_members_list.layoutManager = LinearLayoutManager(this)
         rv_members_list.setHasFixedSize(true)
 
         val adapter = MemberListItemsAdapter(this, list)
         rv_members_list.adapter = adapter
+    }
+
+    fun memberAssignSuccess(user: User){
+        hideProgressDialog()
+        mAssignedMemberList.add(user)
+        setupMemberList(mAssignedMemberList)
     }
 
 }
