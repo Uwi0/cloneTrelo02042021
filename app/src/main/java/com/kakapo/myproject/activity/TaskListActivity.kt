@@ -24,7 +24,8 @@ class TaskListActivity : BaseActivity(){
 
         var boardDocumentId= ""
         if(intent.hasExtra(Constants.DOCUMENT_ID)){
-            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID)!!
+            //TODO if error change to String to notNull assertion
+            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID).toString()
         }
 
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -41,6 +42,7 @@ class TaskListActivity : BaseActivity(){
         when(item.itemId){
             R.id.action_members -> {
                 val intent = Intent(this, MembersActivity::class.java)
+                intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
                 startActivity(intent)
             }
         }
