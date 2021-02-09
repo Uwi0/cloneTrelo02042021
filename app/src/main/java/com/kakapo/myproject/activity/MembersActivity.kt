@@ -1,7 +1,10 @@
 package com.kakapo.myproject.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakapo.myproject.R
 import com.kakapo.myproject.adapter.MemberListItemsAdapter
@@ -10,6 +13,7 @@ import com.kakapo.myproject.models.Board
 import com.kakapo.myproject.models.User
 import com.kakapo.myproject.utils.Constants
 import kotlinx.android.synthetic.main.activity_members.*
+import kotlinx.android.synthetic.main.dialog_search_member.*
 
 class MembersActivity : BaseActivity() {
 
@@ -28,6 +32,21 @@ class MembersActivity : BaseActivity() {
         FireStoreClass().getAssignedMembersListDetails(this, mBoardDetail.assignedTo)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_member, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_add_member ->{
+                dialogSearchMember()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun setupActionBar(){
         setSupportActionBar(toolbar_members_activity)
         val actionBar = supportActionBar
@@ -41,6 +60,27 @@ class MembersActivity : BaseActivity() {
         toolbar_members_activity.setNavigationOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun dialogSearchMember(){
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_search_member)
+        dialog.tv_add.setOnClickListener {
+            val email = dialog.et_email_search_member.text.toString()
+            if (email.isNotEmpty()){
+                //todo search email from database
+            }else{
+                Toast.makeText(
+                    this@MembersActivity,
+                    "Please enter member email address",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        dialog.tv_cancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     fun setupMemberList(list: ArrayList<User>){
