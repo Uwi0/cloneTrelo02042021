@@ -1,6 +1,9 @@
 package com.kakapo.myproject.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakapo.myproject.R
 import com.kakapo.myproject.adapter.TaskListItemAdapter
@@ -28,6 +31,22 @@ class TaskListActivity : BaseActivity(){
         FireStoreClass().getBoardDetails(this, boardDocumentId)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_members, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId){
+            R.id.action_members -> {
+                val intent = Intent(this, MembersActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun setupActionBar(){
         setSupportActionBar(toolbar_task_list_activity)
