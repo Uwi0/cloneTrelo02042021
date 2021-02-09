@@ -1,5 +1,6 @@
 package com.kakapo.myproject.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
@@ -38,7 +39,7 @@ open class TaskListItemAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val model = list[position]
+        val model: Task = list[position]
 
         if (holder is MyViewHolder) {
 
@@ -74,6 +75,33 @@ open class TaskListItemAdapter(
                 }
             }
         }
+
+        holder.itemView.ib_edit_list_name.setOnClickListener{
+            holder.itemView.et_edit_task_list_name.setText(model.title)
+            holder.itemView.ll_title_view.visibility = View.GONE
+            holder.itemView.cv_edit_task_list_name.visibility = View.VISIBLE
+        }
+
+        holder.itemView.ib_close_editable_view.setOnClickListener{
+            holder.itemView.ll_title_view.visibility = View.VISIBLE
+            holder.itemView.cv_edit_task_list_name.visibility = View.GONE
+        }
+
+        holder.itemView.ib_done_edit_list_name.setOnClickListener{
+            val listName = holder.itemView.et_edit_task_list_name.text.toString()
+            if (listName.isNotEmpty()) {
+                if (context is TaskListActivity) {
+                    context.updateTaskList(position,listName, model)
+                }
+            } else {
+                Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        holder.itemView.ib_delete_list.setOnClickListener{
+            alertDialogForDeleteList(position, model.title)
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -83,6 +111,27 @@ open class TaskListItemAdapter(
     private fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
     private fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+    private fun alertDialogForDeleteList(position: Int, title: String){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Alert")
+        builder.setMessage("Are you sure want to delete $title ?")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton("Yes"){dialog, _ ->
+            dialog.dismiss()
+
+            if(context is TaskListActivity){
+                context.deleteTaskList(position)
+            }
+        }
+        builder.setNegativeButton("No"){dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
