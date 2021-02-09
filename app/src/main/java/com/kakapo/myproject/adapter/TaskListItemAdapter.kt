@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kakapo.myproject.R
 import com.kakapo.myproject.activity.TaskListActivity
@@ -39,7 +40,7 @@ open class TaskListItemAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val model: Task = list[position]
+        val model = list[position]
 
         if (holder is MyViewHolder) {
 
@@ -63,10 +64,12 @@ open class TaskListItemAdapter(
                 holder.itemView.tv_add_task_list.visibility = View.VISIBLE
                 holder.itemView.cv_add_task_list_name.visibility = View.GONE
             }
+
             holder.itemView.ib_done_list_name.setOnClickListener {
                 val listName = holder.itemView.et_task_list_name.text.toString()
 
                 if (listName.isNotEmpty()) {
+                    // Here we check the context is an instance of the TaskListActivity.
                     if (context is TaskListActivity) {
                         context.createTaskList(listName)
                     }
@@ -74,57 +77,66 @@ open class TaskListItemAdapter(
                     Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
 
-        holder.itemView.ib_edit_list_name.setOnClickListener{
-            holder.itemView.et_edit_task_list_name.setText(model.title)
-            holder.itemView.ll_title_view.visibility = View.GONE
-            holder.itemView.cv_edit_task_list_name.visibility = View.VISIBLE
-        }
+            holder.itemView.ib_edit_list_name.setOnClickListener {
 
-        holder.itemView.ib_close_editable_view.setOnClickListener{
-            holder.itemView.ll_title_view.visibility = View.VISIBLE
-            holder.itemView.cv_edit_task_list_name.visibility = View.GONE
-        }
-
-        holder.itemView.ib_done_edit_list_name.setOnClickListener{
-            val listName = holder.itemView.et_edit_task_list_name.text.toString()
-            if (listName.isNotEmpty()) {
-                if (context is TaskListActivity) {
-                    context.updateTaskList(position,listName, model)
-                }
-            } else {
-                Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                holder.itemView.et_edit_task_list_name.setText(model.title) // Set the existing title
+                holder.itemView.ll_title_view.visibility = View.GONE
+                holder.itemView.cv_edit_task_list_name.visibility = View.VISIBLE
             }
-        }
 
-        holder.itemView.ib_delete_list.setOnClickListener{
-            alertDialogForDeleteList(position, model.title)
-        }
-
-        holder.itemView.tv_add_card.setOnClickListener{
-            holder.itemView.tv_add_card.visibility = View.GONE
-            holder.itemView.cv_add_card.visibility = View.VISIBLE
-
-        }
-
-        holder.itemView.ib_close_card_name.setOnClickListener {
-            holder.itemView.tv_add_card.visibility = View.VISIBLE
-            holder.itemView.cv_add_card.visibility = View.GONE
-        }
-
-        holder.itemView.ib_done_card_name.setOnClickListener {
-            val cardName = holder.itemView.et_card_name.text.toString()
-
-            if (cardName.isNotEmpty()) {
-                if (context is TaskListActivity) {
-                    context.addCardToTaskList(position, cardName)
-                }
-            } else {
-                Toast.makeText(context, "Please Enter Card Name.", Toast.LENGTH_SHORT).show()
+            holder.itemView.ib_close_editable_view.setOnClickListener {
+                holder.itemView.ll_title_view.visibility = View.VISIBLE
+                holder.itemView.cv_edit_task_list_name.visibility = View.GONE
             }
-        }
 
+            holder.itemView.ib_done_edit_list_name.setOnClickListener {
+                val listName = holder.itemView.et_edit_task_list_name.text.toString()
+
+                if (listName.isNotEmpty()) {
+                    if (context is TaskListActivity) {
+                        context.updateTaskList(position, listName, model)
+                    }
+                } else {
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            holder.itemView.ib_delete_list.setOnClickListener {
+
+                alertDialogForDeleteList(position, model.title)
+            }
+
+            holder.itemView.tv_add_card.setOnClickListener {
+
+                holder.itemView.tv_add_card.visibility = View.GONE
+                holder.itemView.cv_add_card.visibility = View.VISIBLE
+
+                holder.itemView.ib_close_card_name.setOnClickListener {
+                    holder.itemView.tv_add_card.visibility = View.VISIBLE
+                    holder.itemView.cv_add_card.visibility = View.GONE
+                }
+
+                holder.itemView.ib_done_card_name.setOnClickListener {
+
+                    val cardName = holder.itemView.et_card_name.text.toString()
+
+                    if (cardName.isNotEmpty()) {
+                        if (context is TaskListActivity) {
+                            context.addCardToTaskList(position, cardName)
+                        }
+                    }else{
+                        Toast.makeText(context, "Please Enter Card Detail.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            holder.itemView.rv_card_list.layoutManager = LinearLayoutManager(context)
+            holder.itemView.rv_card_list.setHasFixedSize(true)
+
+            val adapter = CardListItemsAdapter(context, model.cards)
+            holder.itemView.rv_card_list.adapter = adapter
+        }
     }
 
     override fun getItemCount(): Int {
