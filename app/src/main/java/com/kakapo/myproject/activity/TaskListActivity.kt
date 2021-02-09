@@ -6,6 +6,7 @@ import com.kakapo.myproject.R
 import com.kakapo.myproject.adapter.TaskListItemAdapter
 import com.kakapo.myproject.firebase.FireStoreClass
 import com.kakapo.myproject.models.Board
+import com.kakapo.myproject.models.Card
 import com.kakapo.myproject.models.Task
 import com.kakapo.myproject.utils.Constants
 import kotlinx.android.synthetic.main.activity_task_list.*
@@ -66,7 +67,7 @@ class TaskListActivity : BaseActivity(){
     fun addUpdateTaskListSuccess(){
         hideProgressDialog()
         showProgressDialog(resources.getString(R.string.please_wait))
-        FireStoreClass().getBoardDetails(this, mBoardDetails.documentId)
+        FireStoreClass().getBoardDetails(this@TaskListActivity, mBoardDetails.documentId)
     }
 
     fun createTaskList(taskListName: String){
@@ -93,6 +94,31 @@ class TaskListActivity : BaseActivity(){
     fun deleteTaskList(position: Int){
         mBoardDetails.taskList.removeAt(position)
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+
+        FireStoreClass().addUpdateTaskList(this, mBoardDetails)
+    }
+
+    fun addCardToTaskList(position: Int, cardName: String){
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size -1)
+
+        val cardAssignedUserList: ArrayList<String> = ArrayList()
+        cardAssignedUserList.add(FireStoreClass().getCurrentUserId())
+
+        val card = Card(cardName, FireStoreClass().getCurrentUserId(), cardAssignedUserList)
+
+
+        val cardList = mBoardDetails.taskList[position].cards
+        cardList.add(card)
+
+        val task = Task(
+                mBoardDetails.taskList[position].title,
+                mBoardDetails.taskList[position].createdBy,
+                cardList
+        )
+
+        mBoardDetails.taskList[position] = task
 
         showProgressDialog(resources.getString(R.string.please_wait))
 

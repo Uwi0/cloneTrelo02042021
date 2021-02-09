@@ -32,7 +32,7 @@ class FireStoreClass {
                 .document()
                 .set(board, SetOptions.merge())
                 .addOnSuccessListener{
-                    Log.e(activity.javaClass.simpleName, "Board Created successfully.")
+                    Log.i(activity.javaClass.simpleName, "Board Created successfully.")
 
                     Toast.makeText(
                             activity,
@@ -141,19 +141,22 @@ class FireStoreClass {
 
     fun getBoardDetails(activity: TaskListActivity, documentId: String) {
         mFireStore.collection(Constants.BOARDS)
-            .document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                Log.e(activity.javaClass.simpleName, document.toString())
+                .document(documentId)
+                .get()
+                .addOnSuccessListener { document ->
+                    Log.e(activity.javaClass.simpleName, document.toString())
 
-                val board = document.toObject(Board::class.java)!!
-                board.documentId = document.id
-                activity.boardDetails(board)
-            }
-            .addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
-            }
+
+                    val board = document.toObject(Board::class.java)!!
+                    board.documentId = document.id
+
+                    activity.boardDetails(board)
+
+                }
+                .addOnFailureListener { e ->
+                    activity.hideProgressDialog()
+                    Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+                }
     }
 
     fun addUpdateTaskList(activity: TaskListActivity, board: Board){
