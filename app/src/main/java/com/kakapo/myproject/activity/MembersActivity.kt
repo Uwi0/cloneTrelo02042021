@@ -1,10 +1,10 @@
 package com.kakapo.myproject.activity
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakapo.myproject.R
@@ -20,6 +20,7 @@ class MembersActivity : BaseActivity() {
 
     private lateinit var mBoardDetail: Board
     private lateinit var mAssignedMemberList: ArrayList<User>
+    private var anyChangeMade: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,13 @@ class MembersActivity : BaseActivity() {
         toolbar_members_activity.setNavigationOnClickListener {
             onBackPressed()
         }
+    }
+
+    override fun onBackPressed() {
+        if(anyChangeMade){
+            setResult(Activity.RESULT_OK)
+        }
+        super.onBackPressed()
     }
 
     private fun dialogSearchMember() {
@@ -111,6 +119,7 @@ class MembersActivity : BaseActivity() {
     fun memberAssignSuccess(user: User){
         hideProgressDialog()
         mAssignedMemberList.add(user)
+        anyChangeMade = true
         setupMemberList(mAssignedMemberList)
     }
 
