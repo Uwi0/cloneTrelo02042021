@@ -37,6 +37,7 @@ class CardDetailActivity : BaseActivity() {
 
         et_name_card_details.setSelection(et_name_card_details.text.toString().length)
         setupSelectedLabelColorClickListener()
+        setupColorWhenCreated()
         setButtonUpdate()
     }
 
@@ -176,7 +177,8 @@ class CardDetailActivity : BaseActivity() {
         val listDialog = object : LabelColorListDialog(
                 this@CardDetailActivity,
                 colorList,
-                resources.getString(R.string.str_select_label_color)
+                resources.getString(R.string.str_select_label_color),
+                mSelectedColor
         ){
             override fun onItemSelected(color: String) {
                 mSelectedColor = color
@@ -191,6 +193,13 @@ class CardDetailActivity : BaseActivity() {
     private fun setupSelectedLabelColorClickListener(){
         tv_select_label_color.setOnClickListener {
             labelColorListDialog()
+        }
+    }
+
+    private fun setupColorWhenCreated(){
+        mSelectedColor = mBoarDetails.taskList[mTaskListPosition].cards[mCardPosition].labelColor
+        if (mSelectedColor.isNotEmpty()) {
+            setColor()
         }
     }
 

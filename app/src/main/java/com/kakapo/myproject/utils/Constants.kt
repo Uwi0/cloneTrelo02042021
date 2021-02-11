@@ -25,6 +25,7 @@ object Constants {
     const val EMAIL: String = "email"
     const val TASK_LIST_ITEM_POSITION: String = "task_list_item_position"
     const val CARD_LIST_ITEM_POSITION: String = "card_list_item_position"
+    const val BOARD_MEMBER_LIST: String = "board_member_list"
 
     fun showImageChooser(activity: Activity){
         val galleryIntent = Intent(
