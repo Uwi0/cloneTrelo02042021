@@ -162,4 +162,9 @@ class TaskListActivity : BaseActivity(){
 
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
     }
+
+    fun cardDetails(taskListPosition: Int, cardPosition:Int){
+        val intent = Intent(this@TaskListActivity, CardDetailActivity::class.java)
+        startActivity(intent)
+    }
 }
