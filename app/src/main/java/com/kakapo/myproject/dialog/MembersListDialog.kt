@@ -35,7 +35,7 @@ abstract class MembersListDialog(
     }
 
     private fun setupRecyclerView(view: View){
-        view.tv_task_list_title.text = title
+        view.tv_title_dialog_chose_color.text = title
 
         if(list.size > 0){
 
