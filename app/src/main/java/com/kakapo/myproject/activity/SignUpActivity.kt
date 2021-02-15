@@ -37,6 +37,7 @@ class SignUpActivity : BaseActivity() {
         )
 
         setupActionBar()
+        setUpBtnSignUp()
     }
 
     private fun setupActionBar(){
@@ -52,7 +53,6 @@ class SignUpActivity : BaseActivity() {
             onBackPressed()
         }
 
-        setUpBtnSignUp()
     }
 
     private fun setUpBtnSignUp(){

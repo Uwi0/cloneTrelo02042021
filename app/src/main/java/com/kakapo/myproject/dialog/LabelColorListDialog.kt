@@ -34,9 +34,9 @@ abstract class LabelColorListDialog(
 
     private fun setupRecyclerView(view: View){
         view.tv_title_dialog_chose_color.text = title
-        view.rv_list_color_choser.layoutManager = LinearLayoutManager(context)
+        view.rv_list_dialog.layoutManager = LinearLayoutManager(context)
         adapter = LabelColorListAdapter(context, list, mSelectedColor)
-        view.rv_list_color_choser.adapter = adapter
+        view.rv_list_dialog.adapter = adapter
 
         adapter!!.onItemClickListener = object : LabelColorListAdapter.OnItemClickListener{
             override fun onCLick(position: Int, color: String) {

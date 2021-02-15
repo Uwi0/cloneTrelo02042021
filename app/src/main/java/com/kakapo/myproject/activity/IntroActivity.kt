@@ -33,6 +33,7 @@ class IntroActivity : BaseActivity() {
         btnSignUpIntro.setOnClickListener{
             val intent = Intent(this@IntroActivity, SignUpActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -40,6 +41,7 @@ class IntroActivity : BaseActivity() {
         btnSignInIntro.setOnClickListener{
             val intent = Intent(this@IntroActivity, SignInActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
     }

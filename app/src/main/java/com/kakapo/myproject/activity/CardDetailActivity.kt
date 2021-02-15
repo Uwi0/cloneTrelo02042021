@@ -9,10 +9,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.kakapo.myproject.R
 import com.kakapo.myproject.dialog.LabelColorListDialog
+import com.kakapo.myproject.dialog.MembersListDialog
 import com.kakapo.myproject.firebase.FireStoreClass
 import com.kakapo.myproject.models.Board
 import com.kakapo.myproject.models.Card
 import com.kakapo.myproject.models.Task
+import com.kakapo.myproject.models.User
 import com.kakapo.myproject.utils.Constants
 import kotlinx.android.synthetic.main.activity_card_detail.*
 
@@ -22,6 +24,7 @@ class CardDetailActivity : BaseActivity() {
     private var mTaskListPosition = -1
     private var mCardPosition = -1
     private var mSelectedColor = ""
+    private lateinit var mMembersDetailList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,7 @@ class CardDetailActivity : BaseActivity() {
         et_name_card_details.setSelection(et_name_card_details.text.toString().length)
         setupSelectedLabelColorClickListener()
         setupColorWhenCreated()
+        setupSelectMemberSetOnclick()
         setButtonUpdate()
     }
 
@@ -103,6 +107,9 @@ class CardDetailActivity : BaseActivity() {
         }
         if (intent.hasExtra(Constants.CARD_LIST_ITEM_POSITION)){
             mCardPosition = intent.getIntExtra(Constants.CARD_LIST_ITEM_POSITION, -1)
+        }
+        if(intent.hasExtra(Constants.BOARD_MEMBERS_LIST)){
+            mMembersDetailList = intent.getParcelableArrayListExtra(Constants.BOARD_MEMBERS_LIST)!!
         }
     }
 
@@ -200,6 +207,51 @@ class CardDetailActivity : BaseActivity() {
         mSelectedColor = mBoarDetails.taskList[mTaskListPosition].cards[mCardPosition].labelColor
         if (mSelectedColor.isNotEmpty()) {
             setColor()
+        }
+    }
+
+    private fun memberListDialog(){
+        val cardAssignedMemberList = mBoarDetails
+                .taskList[mTaskListPosition]
+                .cards[mCardPosition]
+                .assignedTo
+
+        if(cardAssignedMemberList.size > 0){
+            for (i in mMembersDetailList.indices){
+                for (j in cardAssignedMemberList){
+                    if (mMembersDetailList[i].id == j){
+                        mMembersDetailList[i].selected = true
+                    }
+                }
+            }
+        }else{
+            for (i in mMembersDetailList.indices){
+                mMembersDetailList[i].selected = false
+            }
+        }
+
+        showMemberListDialog()
+
+    }
+
+    private fun showMemberListDialog(){
+        val listDialog = object: MembersListDialog(
+                this@CardDetailActivity,
+                mMembersDetailList,
+                resources.getString(R.string.str_select_member)
+        ){
+            override fun onItemSelected(user: User, action: String) {
+                // TODO implemet member functionality
+            }
+
+        }
+
+        listDialog.show()
+    }
+
+    private fun setupSelectMemberSetOnclick(){
+        tv_select_members.setOnClickListener {
+            memberListDialog()
         }
     }
 

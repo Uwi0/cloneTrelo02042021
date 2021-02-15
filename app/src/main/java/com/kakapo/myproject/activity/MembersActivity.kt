@@ -106,7 +106,7 @@ class MembersActivity : BaseActivity() {
         FireStoreClass().assignMemberToBoard(this, mBoardDetail, user)
     }
 
-    fun setupMemberList(list: ArrayList<User>){
+    fun setupMembersList(list: ArrayList<User>){
         mAssignedMemberList = list
         hideProgressDialog()
         rv_members_list.layoutManager = LinearLayoutManager(this)
@@ -120,7 +120,7 @@ class MembersActivity : BaseActivity() {
         hideProgressDialog()
         mAssignedMemberList.add(user)
         anyChangeMade = true
-        setupMemberList(mAssignedMemberList)
+        setupMembersList(mAssignedMemberList)
     }
 
 }

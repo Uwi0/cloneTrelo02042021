@@ -144,7 +144,7 @@ class FireStoreClass {
                 .document(documentId)
                 .get()
                 .addOnSuccessListener { document ->
-                    Log.e(activity.javaClass.simpleName, document.toString())
+                    Log.i(activity.javaClass.simpleName, document.toString())
 
 
                     val board = document.toObject(Board::class.java)!!
@@ -188,7 +188,7 @@ class FireStoreClass {
 
     }
 
-    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>){
+    fun getAssignedMembersListDetails(activity: Activity, assignedTo: ArrayList<String>){
         mFireStore.collection(Constants.USERS)
             .whereIn(Constants.ID, assignedTo)
             .get()
@@ -202,11 +202,22 @@ class FireStoreClass {
                     usersList.add(user)
                 }
 
-                activity.setupMemberList(usersList)
+                if(activity is MembersActivity){
+                    activity.setupMembersList(usersList)
+                }else if(activity is TaskListActivity){
+                    activity.boardMembersDetailsList(usersList)
+                }
+
             }
             .addOnFailureListener { e ->
-                activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error try to get user", e)
+                if(activity is MembersActivity){
+                    activity.hideProgressDialog()
+                    Log.e(activity.javaClass.simpleName, "Error try to get user", e)
+                }else if(activity is TaskListActivity){
+                    activity.hideProgressDialog()
+                    Log.e(activity.javaClass.simpleName, "Error try to get user", e)
+                }
+
             }
     }
 

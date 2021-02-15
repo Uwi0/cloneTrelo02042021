@@ -39,7 +39,7 @@
                 android:background="@color/divider_color" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list_color_choser"
+                android:id="@+id/rv_list_dialog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
