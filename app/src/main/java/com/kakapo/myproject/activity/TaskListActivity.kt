@@ -33,7 +33,7 @@ class TaskListActivity : BaseActivity(){
         setContentView(R.layout.activity_task_list)
 
         if(intent.hasExtra(Constants.DOCUMENT_ID)){
-            //TODO if error change to String to notNull assertion
+            //TODO if error change from String to notNull assertion
             mBoardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID).toString()
         }
 
@@ -189,5 +189,15 @@ class TaskListActivity : BaseActivity(){
         rv_task_list.setHasFixedSize(true)
         val adapter = TaskListItemAdapter(this, mBoardDetails.taskList)
         rv_task_list.adapter = adapter
+    }
+
+    fun updateCardsInTaskList(taskListPosition: Int, cards: ArrayList<Card>) {
+
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+
+        mBoardDetails.taskList[taskListPosition].cards = cards
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FireStoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
     }
 }
