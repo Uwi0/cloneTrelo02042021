@@ -28,6 +28,9 @@ object Constants {
     const val BOARD_MEMBERS_LIST: String = "board_member_list"
     const val SELECT: String = "Select"
     const val UN_SELECT: String = "UnSelect"
+    const val  My_PROJECT_PREFERENCE = "my_project_prefs"
+    const val FCM_TOKEN_UPDATED = "fcmTokenUpdated"
+    const val FCM_TOKEN = "fcmToken"
 
     fun showImageChooser(activity: Activity){
         val galleryIntent = Intent(
